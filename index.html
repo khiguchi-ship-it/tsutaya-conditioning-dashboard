@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TSUTAYA Conditioning ダッシュボード</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: sans-serif; background: #f5f5f3; color: #1a1a1a; }
+.wrap { padding: 20px; max-width: 900px; margin: 0 auto; }
+.store-name { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+.store-sub { font-size: 13px; color: #888; margin-bottom: 20px; }
+.month-selector { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+.month-btn { padding: 6px 14px; font-size: 13px; border-radius: 20px; border: 1px solid #ccc; background: #fff; color: #555; cursor: pointer; }
+.month-btn.active { background: #0F6E56; color: #fff; border-color: #0F6E56; }
+.kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.kpi-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 16px; }
+.kpi-label { font-size: 12px; color: #888; margin-bottom: 6px; }
+.kpi-value { font-size: 24px; font-weight: 500; margin-bottom: 10px; }
+.vs-row { display: flex; align-items: center; gap: 6px; padding-top: 10px; border-top: 1px solid #eee; flex-wrap: wrap; }
+.vs-label { font-size: 11px; color: #888; }
+.badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 10px; }
+.badge-good { background: #E1F5EE; color: #0F6E56; }
+.badge-bad { background: #FCEBEB; color: #A32D2D; }
+.chart-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 16px; margin-bottom: 14px; }
+.chart-title { font-size: 13px; font-weight: 500; margin-bottom: 14px; }
+.legend { display: flex; gap: 14px; font-size: 11px; color: #888; margin-bottom: 14px; }
+.legend span { display: flex; align-items: center; gap: 4px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="store-name">TSUTAYA Conditioning 渋谷本町店</div>
+  <div class="store-sub">広告実績レポート / フランチャイズオーナー向け</div>
+  <div class="month-selector" id="monthBtns"></div>
+  <div class="kpi-grid" id="kpiGrid"></div>
+  <div class="chart-card">
+    <div class="chart-title">利用コスト（月別推移）</div>
+    <div class="legend"><span><span class="dot" style="background:#1D9E75"></span>この店舗</span><span><span class="dot" style="background:#aaa"></span>全国平均</span></div>
+    <div style="position:relative;height:200px;"><canvas id="c1"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">体験予約数 CV（月別推移）</div>
+    <div class="legend"><span><span class="dot" style="background:#1D9E75"></span>この店舗</span><span><span class="dot" style="background:#aaa"></span>全国平均</span></div>
+    <div style="position:relative;height:200px;"><canvas id="c2"></canvas></div>
+  </div>
+  <div class="chart-card">
+    <div class="chart-title">体験予約単価 CPA（月別推移）</div>
+    <div class="legend"><span><span class="dot" style="background:#1D9E75"></span>この店舗</span><span><span class="dot" style="background:#aaa"></span>全国平均</span></div>
+    <div style="position:relative;height:200px;"><canvas id="c3"></canvas></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const M=['10月','11月','12月','1月','2月','3月'];
+const D={cost:{s:[198000,210000,225000,240000,218000,232000],a:[185000,190000,200000,205000,195000,202000]},cv:{s:[38,42,45,50,44,48],a:[32,34,36,38,35,37]},cpa:{s:[5210,5000,5000,4800,4954,4833],a:[5781,5588,5556,5394,5571,5459]}};
+let sel=5;
+const fmt=(n,t)=>t==='cv'?Math.round(n)+'件':'¥'+Math.round(n).toLocaleString();
+const badge=(s,a,t)=>{const g=t==='cpa'?s<a:s>a;return g?'<span class="badge badge-good">'+(t==='cpa'?'▼ 平均より安い':'▲ 全国平均より上')+'</span>':'<span class="badge badge-bad">'+(t==='cpa'?'▲ 平均より高い':'▼ 全国平均より下')+'</span>';};
+function renderKPI(){const i=sel;document.getElementById('kpiGrid').innerHTML=[{l:'利用コスト',k:'cost'},{l:'体験予約数 CV',k:'cv'},{l:'体験予約単価 CPA',k:'cpa'}].map(({l,k})=>'<div class="kpi-card"><div class="kpi-label">'+l+'</div><div class="kpi-value">'+fmt(D[k].s[i],k)+'</div><div class="vs-row"><div class="vs-label">全国平均 '+fmt(D[k].a[i],k)+'</div>'+badge(D[k].s[i],D[k].a[i],k)+'</div></div>').join('');}
+function renderM(){document.getElementById('monthBtns').innerHTML=M.map((m,i)=>'<button class="month-btn'+(i===sel?' active':'')+'" onclick="pick('+i+')">'+m+'</button>').join('');}
+window.pick=i=>{sel=i;renderM();renderKPI();};
+const charts={};
+function mkChart(id,ds,dsa,pre){if(charts[id])charts[id].destroy();charts[id]=new Chart(document.getElementById(id),{type:'line',data:{labels:M,datasets:[{data:ds,borderColor:'#1D9E75',backgroundColor:'#1D9E7518',tension:0.3,pointRadius:4,fill:true},{data:dsa,borderColor:'#aaa',backgroundColor:'transparent',tension:0.3,pointRadius:4,borderDash:[4,3]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11}}},y:{ticks:{font:{size:11},callback:v=>pre+Math.round(v).toLocaleString()}}}}});}
+renderM();renderKPI();
+mkChart('c1',D.cost.s,D.cost.a,'¥');
+mkChart('c2',D.cv.s,D.cv.a,'');
+mkChart('c3',D.cpa.s,D.cpa.a,'¥');
+</script>
+</body>
+</html>

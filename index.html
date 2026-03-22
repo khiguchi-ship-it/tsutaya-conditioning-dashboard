@@ -189,11 +189,13 @@ const funnelData=[
 ];
 function renderFunnel(){
   const [imp,cl,lp,cv]=funnelData[sel];
+  const max=imp;
+  const pct=v=>Math.max(Math.round(v/max*100),2);
   const steps=[
-    {label:'広告が表示された回数',val:imp,fmt:imp.toLocaleString()+'回',rate:'',color:'#1D9E75',w:100},
-    {label:'広告をタップした回数',val:cl,fmt:cl.toLocaleString()+'回',rate:Math.round(cl/imp*1000)/10+'%がタップ',color:'#5DCAA5',w:Math.max(Math.round(cl/imp*100*40)+8,12)},
-    {label:'ページを見た人数',val:lp,fmt:lp.toLocaleString()+'人',rate:'タップの'+Math.round(lp/cl*100)+'%が閲覧',color:'#9FE1CB',w:Math.max(Math.round(lp/imp*100*120)+6,10)},
-    {label:'体験予約した人数',val:cv,fmt:cv+'件',rate:'タップの'+Math.round(cv/cl*100)+'%が予約',color:'#0F6E56',w:Math.max(Math.round(cv/imp*100*1800)+4,6)}
+    {label:'広告が表示された回数',val:imp,fmt:imp.toLocaleString()+'回',rate:'',color:'#1D9E75',w:pct(imp)},
+    {label:'広告をタップした回数',val:cl,fmt:cl.toLocaleString()+'回',rate:Math.round(cl/imp*1000)/10+'%がタップ',color:'#5DCAA5',w:pct(cl)},
+    {label:'ページを見た人数',val:lp,fmt:lp.toLocaleString()+'人',rate:'タップの'+Math.round(lp/cl*100)+'%が閲覧',color:'#9FE1CB',w:pct(lp)},
+    {label:'体験予約した人数',val:cv,fmt:cv+'件',rate:'タップの'+Math.round(cv/cl*100)+'%が予約',color:'#0F6E56',w:pct(cv)}
   ];
   document.getElementById('funnelChart').innerHTML=steps.map(s=>
     '<div class="funnel-row">'+

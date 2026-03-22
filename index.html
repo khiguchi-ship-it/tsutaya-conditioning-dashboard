@@ -33,18 +33,17 @@ body { font-family: sans-serif; background: #f5f5f3; color: #1a1a1a; }
 .media-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
 .media-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; color: #fff; flex-shrink: 0; }
 .media-name { font-size: 14px; font-weight: 500; }
-.media-type { font-size: 11px; color: #888; }
+.media-type { font-size: 11px; color: #888; margin-top: 2px; }
 .media-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .stat-box { background: #f8f8f6; border-radius: 8px; padding: 10px; text-align: center; }
 .stat-label { font-size: 10px; color: #888; margin-bottom: 4px; }
 .stat-value { font-size: 15px; font-weight: 500; color: #1a1a1a; }
 .funnel-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 20px; margin-bottom: 14px; }
-.funnel-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
-.funnel-label { font-size: 13px; color: #555; width: 120px; flex-shrink: 0; }
-.funnel-bar-wrap { flex: 1; background: #f0f0ee; border-radius: 4px; height: 28px; overflow: hidden; }
-.funnel-bar { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 10px; font-size: 12px; font-weight: 500; color: #fff; }
-.funnel-num { font-size: 13px; font-weight: 500; color: #1a1a1a; width: 80px; text-align: right; flex-shrink: 0; }
-.funnel-rate { font-size: 11px; color: #888; width: 50px; text-align: right; flex-shrink: 0; }
+.funnel-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.funnel-label { font-size: 13px; color: #555; width: 160px; flex-shrink: 0; }
+.funnel-bar-wrap { flex: 1; background: #f0f0ee; border-radius: 4px; height: 30px; overflow: hidden; }
+.funnel-bar { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 12px; font-size: 12px; font-weight: 500; color: #fff; white-space: nowrap; }
+.funnel-rate { font-size: 12px; color: #888; width: 80px; text-align: right; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -56,24 +55,24 @@ body { font-family: sans-serif; background: #f5f5f3; color: #1a1a1a; }
   <!-- KPI -->
   <div class="kpi-grid" id="kpiGrid"></div>
 
-  <!-- KPIグラフ -->
+  <!-- グラフ -->
   <div class="chart-card">
-    <div class="chart-title">利用コスト（月別推移）</div>
+    <div class="chart-title">広告費用（月別推移）</div>
     <div class="legend"><span><span class="dot" style="background:#1D9E75"></span>この店舗</span><span><span class="dot" style="background:#aaa"></span>全国平均</span></div>
     <div style="position:relative;height:180px;"><canvas id="c1"></canvas></div>
   </div>
   <div class="chart-card">
-    <div class="chart-title">体験予約数 CV（月別推移）</div>
+    <div class="chart-title">体験予約数（月別推移）</div>
     <div class="legend"><span><span class="dot" style="background:#1D9E75"></span>この店舗</span><span><span class="dot" style="background:#aaa"></span>全国平均</span></div>
     <div style="position:relative;height:180px;"><canvas id="c2"></canvas></div>
   </div>
   <div class="chart-card">
-    <div class="chart-title">体験予約単価 CPA（月別推移）</div>
+    <div class="chart-title">体験予約1件あたりの費用（月別推移）</div>
     <div class="legend"><span><span class="dot" style="background:#1D9E75"></span>この店舗</span><span><span class="dot" style="background:#aaa"></span>全国平均</span></div>
     <div style="position:relative;height:180px;"><canvas id="c3"></canvas></div>
   </div>
 
-  <!-- 施策・広告セクション -->
+  <!-- 出稿中広告 -->
   <div class="section-title">出稿中の広告メニュー</div>
   <div class="media-grid">
     <div class="media-card">
@@ -81,7 +80,7 @@ body { font-family: sans-serif; background: #f5f5f3; color: #1a1a1a; }
         <div class="media-icon" style="background:#4285F4;">G</div>
         <div>
           <div class="media-name">Google 検索広告</div>
-          <div class="media-type">「コンディショニング 体験」などのキーワードで表示</div>
+          <div class="media-type">「コンディショニング 体験」などで検索した人に表示</div>
         </div>
       </div>
       <div class="media-stats" id="google-stats"></div>
@@ -90,36 +89,36 @@ body { font-family: sans-serif; background: #f5f5f3; color: #1a1a1a; }
       <div class="media-header">
         <div class="media-icon" style="background:#1877F2;">f</div>
         <div>
-          <div class="media-name">Meta（Instagram / Facebook）</div>
-          <div class="media-type">エリア・年齢でターゲットを絞った広告</div>
+          <div class="media-name">Instagram / Facebook 広告</div>
+          <div class="media-type">近くに住む方・年齢を絞って表示</div>
         </div>
       </div>
       <div class="media-stats" id="meta-stats"></div>
     </div>
     <div class="media-card">
       <div class="media-header">
-        <div class="media-icon" style="background:#1D9E75;">P</div>
+        <div class="media-icon" style="background:#1D9E75;">G</div>
         <div>
-          <div class="media-name">Google P-MAX</div>
-          <div class="media-type">検索・ディスプレイ・YouTubeを横断して配信</div>
+          <div class="media-name">Google 総合広告（P-MAX）</div>
+          <div class="media-type">検索・動画・Webサイトに幅広く自動配信</div>
         </div>
       </div>
       <div class="media-stats" id="pmax-stats"></div>
     </div>
     <div class="media-card">
       <div class="media-header">
-        <div class="media-icon" style="background:#aaa;">D</div>
+        <div class="media-icon" style="background:#aaa;">B</div>
         <div>
-          <div class="media-name">ディスプレイ広告</div>
-          <div class="media-type">Webサイト・アプリへのバナー表示</div>
+          <div class="media-name">バナー広告</div>
+          <div class="media-type">Webサイトやアプリに画像広告として表示</div>
         </div>
       </div>
       <div class="media-stats" id="display-stats"></div>
     </div>
   </div>
 
-  <!-- 体験予約ファネル -->
-  <div class="section-title">広告からの体験予約ファネル</div>
+  <!-- 予約までの流れ -->
+  <div class="section-title">広告を見てから体験予約までの流れ</div>
   <div class="funnel-card">
     <div id="funnelChart"></div>
   </div>
@@ -128,34 +127,58 @@ body { font-family: sans-serif; background: #f5f5f3; color: #1a1a1a; }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 const M=['10月','11月','12月','1月','2月','3月'];
-const D={cost:{s:[198000,210000,225000,240000,218000,232000],a:[185000,190000,200000,205000,195000,202000]},cv:{s:[38,42,45,50,44,48],a:[32,34,36,38,35,37]},cpa:{s:[5210,5000,5000,4800,4954,4833],a:[5781,5588,5556,5394,5571,5459]}};
+const D={
+  cost:{s:[198000,210000,225000,240000,218000,232000],a:[185000,190000,200000,205000,195000,202000]},
+  cv:{s:[38,42,45,50,44,48],a:[32,34,36,38,35,37]},
+  cpa:{s:[5210,5000,5000,4800,4954,4833],a:[5781,5588,5556,5394,5571,5459]}
+};
 let sel=5;
+
 const fmt=(n,t)=>t==='cv'?Math.round(n)+'件':'¥'+Math.round(n).toLocaleString();
-const badge=(s,a,t)=>{const g=t==='cpa'?s<a:s>a;return g?'<span class="badge badge-good">'+(t==='cpa'?'▼ 平均より安い':'▲ 全国平均より上')+'</span>':'<span class="badge badge-bad">'+(t==='cpa'?'▲ 平均より高い':'▼ 全国平均より下')+'</span>';};
-function renderKPI(){const i=sel;document.getElementById('kpiGrid').innerHTML=[{l:'利用コスト',k:'cost'},{l:'体験予約数 CV',k:'cv'},{l:'体験予約単価 CPA',k:'cpa'}].map(({l,k})=>'<div class="kpi-card"><div class="kpi-label">'+l+'</div><div class="kpi-value">'+fmt(D[k].s[i],k)+'</div><div class="vs-row"><div class="vs-label">全国平均 '+fmt(D[k].a[i],k)+'</div>'+badge(D[k].s[i],D[k].a[i],k)+'</div></div>').join('');}
-function renderM(){document.getElementById('monthBtns').innerHTML=M.map((m,i)=>'<button class="month-btn'+(i===sel?' active':'')+'" onclick="pick('+i+')">'+m+'</button>').join('');}
+const badge=(s,a,t)=>{
+  const g=t==='cpa'?s<a:s>a;
+  return g
+    ?'<span class="badge badge-good">'+(t==='cpa'?'▼ 全国平均より安い':'▲ 全国平均より上')+'</span>'
+    :'<span class="badge badge-bad">'+(t==='cpa'?'▲ 全国平均より高い':'▼ 全国平均より下')+'</span>';
+};
+
+function renderKPI(){
+  const i=sel;
+  document.getElementById('kpiGrid').innerHTML=[
+    {l:'広告費用',k:'cost'},
+    {l:'体験予約数',k:'cv'},
+    {l:'予約1件あたりの費用',k:'cpa'}
+  ].map(({l,k})=>'<div class="kpi-card"><div class="kpi-label">'+l+'</div><div class="kpi-value">'+fmt(D[k].s[i],k)+'</div><div class="vs-row"><div class="vs-label">全国平均 '+fmt(D[k].a[i],k)+'</div>'+badge(D[k].s[i],D[k].a[i],k)+'</div></div>').join('');
+}
+
+function renderM(){
+  document.getElementById('monthBtns').innerHTML=M.map((m,i)=>'<button class="month-btn'+(i===sel?' active':'')+'" onclick="pick('+i+')">'+m+'</button>').join('');
+}
 window.pick=i=>{sel=i;renderM();renderKPI();renderMediaStats();renderFunnel();};
 
-// 施策別データ（月別）
 const mediaData=[
   {imp:[28000,30000,32000,34000,31000,33000],clicks:[980,1050,1100,1200,1080,1140],cv:[18,20,21,24,20,22]},
   {imp:[42000,45000,48000,52000,47000,50000],clicks:[620,680,720,780,700,740],cv:[12,14,15,17,14,16]},
   {imp:[55000,58000,62000,68000,60000,64000],clicks:[440,470,500,540,480,510],cv:[6,7,7,8,7,8]},
   {imp:[18000,19000,20000,22000,19500,21000],clicks:[180,195,210,230,200,215],cv:[2,1,2,1,3,2]}
 ];
-function statBox(label,val){return '<div class="stat-box"><div class="stat-label">'+label+'</div><div class="stat-value">'+val+'</div></div>';}
+
+function statBox(label,val){
+  return '<div class="stat-box"><div class="stat-label">'+label+'</div><div class="stat-value">'+val+'</div></div>';
+}
 function renderMediaStats(){
   const ids=['google-stats','meta-stats','pmax-stats','display-stats'];
   ids.forEach((id,i)=>{
-    const d=mediaData[i][('imp cv clicks'.split(' '))];
     const imp=mediaData[i].imp[sel].toLocaleString();
     const cl=mediaData[i].clicks[sel].toLocaleString();
     const cv=mediaData[i].cv[sel];
-    document.getElementById(id).innerHTML=statBox('表示回数',imp+'回')+statBox('クリック数',cl+'回')+statBox('体験予約',cv+'件');
+    document.getElementById(id).innerHTML=
+      statBox('広告の表示回数',imp+'回')+
+      statBox('広告のタップ数',cl+'回')+
+      statBox('体験予約数',cv+'件');
   });
 }
 
-// ファネルデータ（月別）
 const funnelData=[
   [139000,2220,380,38],
   [152000,2395,420,42],
@@ -166,18 +189,36 @@ const funnelData=[
 ];
 function renderFunnel(){
   const [imp,cl,lp,cv]=funnelData[sel];
-  const maxW=100;
   const steps=[
-    {label:'広告表示（インプレッション）',val:imp,fmt:imp.toLocaleString()+'回',rate:'',color:'#1D9E75',w:100},
-    {label:'広告クリック',val:cl,fmt:cl.toLocaleString()+'回',rate:'CTR '+((cl/imp)*100).toFixed(1)+'%',color:'#5DCAA5',w:Math.round(cl/imp*100*40)+8},
-    {label:'LP到達',val:lp,fmt:lp.toLocaleString()+'人',rate:'→ '+((lp/cl)*100).toFixed(0)+'%',color:'#9FE1CB',w:Math.round(lp/imp*100*120)+6},
-    {label:'体験予約（CV）',val:cv,fmt:cv+'件',rate:'CVR '+((cv/cl)*100).toFixed(1)+'%',color:'#0F6E56',w:Math.round(cv/imp*100*1800)+4}
+    {label:'広告が表示された回数',val:imp,fmt:imp.toLocaleString()+'回',rate:'',color:'#1D9E75',w:100},
+    {label:'広告をタップした回数',val:cl,fmt:cl.toLocaleString()+'回',rate:Math.round(cl/imp*1000)/10+'%がタップ',color:'#5DCAA5',w:Math.max(Math.round(cl/imp*100*40)+8,12)},
+    {label:'ページを見た人数',val:lp,fmt:lp.toLocaleString()+'人',rate:'タップの'+Math.round(lp/cl*100)+'%が閲覧',color:'#9FE1CB',w:Math.max(Math.round(lp/imp*100*120)+6,10)},
+    {label:'体験予約した人数',val:cv,fmt:cv+'件',rate:'タップの'+Math.round(cv/cl*100)+'%が予約',color:'#0F6E56',w:Math.max(Math.round(cv/imp*100*1800)+4,6)}
   ];
-  document.getElementById('funnelChart').innerHTML=steps.map(s=>'<div class="funnel-row"><div class="funnel-label">'+s.label+'</div><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:'+s.w+'%;background:'+s.color+';">'+s.fmt+'</div></div><div class="funnel-rate">'+s.rate+'</div></div>').join('');
+  document.getElementById('funnelChart').innerHTML=steps.map(s=>
+    '<div class="funnel-row">'+
+    '<div class="funnel-label">'+s.label+'</div>'+
+    '<div class="funnel-bar-wrap"><div class="funnel-bar" style="width:'+s.w+'%;background:'+s.color+';">'+s.fmt+'</div></div>'+
+    '<div class="funnel-rate">'+s.rate+'</div>'+
+    '</div>'
+  ).join('');
 }
 
 const charts={};
-function mkChart(id,ds,dsa,pre){if(charts[id])charts[id].destroy();charts[id]=new Chart(document.getElementById(id),{type:'line',data:{labels:M,datasets:[{data:ds,borderColor:'#1D9E75',backgroundColor:'#1D9E7518',tension:0.3,pointRadius:4,fill:true},{data:dsa,borderColor:'#aaa',backgroundColor:'transparent',tension:0.3,pointRadius:4,borderDash:[4,3]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11}}},y:{ticks:{font:{size:11},callback:v=>pre+Math.round(v).toLocaleString()}}}}});}
+function mkChart(id,ds,dsa,pre){
+  if(charts[id])charts[id].destroy();
+  charts[id]=new Chart(document.getElementById(id),{
+    type:'line',
+    data:{labels:M,datasets:[
+      {data:ds,borderColor:'#1D9E75',backgroundColor:'#1D9E7518',tension:0.3,pointRadius:4,fill:true},
+      {data:dsa,borderColor:'#aaa',backgroundColor:'transparent',tension:0.3,pointRadius:4,borderDash:[4,3]}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{
+      x:{ticks:{font:{size:11}}},
+      y:{ticks:{font:{size:11},callback:v=>pre+Math.round(v).toLocaleString()}}
+    }}
+  });
+}
 
 renderM();renderKPI();renderMediaStats();renderFunnel();
 mkChart('c1',D.cost.s,D.cost.a,'¥');
